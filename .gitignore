@@ -1,4 +1,4 @@
 mini_wiki_env/
 __pycache__/
 .flaskenv
-app/__pycache__/
+app/__pycache__/routes.cpython-39.pyc
