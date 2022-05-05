@@ -1,6 +1,15 @@
+from flask import jsonify, request
 from app import app
 
-@app.route("/")
-@app.route("/index")
+document_list = []
+
+@app.route("/index", methods=['POST'])
 def add_document():
-  return "<p>Hello documents</p>"
+    document = {
+                'title':request.json.get('title', ""),
+                'body': request.json.get('body', ""),
+                'tags':request.json.get('tags', "")
+                }
+    document_list.append(document)
+    return jsonify({'document':document}), 201
+

@@ -1,3 +1,4 @@
 mini_wiki_env/
 __pycache__/
 .flaskenv
+app/__pycache__/
