@@ -18,33 +18,29 @@ def add_document():
 
     doc_tags = request.json.get('tags', "")
     for tag in doc_tags:
-        tag_model = models.DocumentTag(tag_text=tag, doc=document)
+        tag_model = models.Tag(tag_text=tag)
         db.session.add(tag_model)
-        db.session.commit()
+        document.tags.append(tag_model)
+    db.session.commit()
     # print(request.json.get('tags', ""), 'requestststst')
 
     return make_response(f"{document} successfully created!")
 
 
-# @app.route('/api/v1/search/<search_word>', methods=['GET'])
-# def search_document(search_word):
-#     matched_documents = []
-#     related_documents = []
-#     for item in document_list:
-#         if((search_word in item['title']) or (search_word in item['body'])):
-#             print('worrrdd')
-#             matched_documents.append(item)
+@app.route('/api/v1/search/<search_word>', methods=['GET'])
+def search_document(search_word):
+    matched_documents = []
+    related_documents = []
+    print(search_word)
 
-#         # for tag in item['tags']:
-#         if((search_word in item['tags'])):
-#             # If Item is already in the matched documents, do we need it in related?
-#             related_documents.append(item)
-#     documents = {
-#         'matched_documents': matched_documents,
-#         'related_documents': related_documents
-#     }
-
-#     return jsonify(documents), 200
+    results = db.session.query(models.Document)\
+    .select_from(models.Document)\
+    .join(models.document_tag)\
+    .join(models.Tag)\
+    .filter(models.Tag.tag_text == search_word)\
+    .all()
+    documents_schema = models.DocumentSchema(many=True)
+    return jsonify(documents_schema.dump(results))
 
 
 @app.route('/api/v1/documents', methods=['GET'])
