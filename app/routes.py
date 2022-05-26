@@ -48,3 +48,9 @@ def get_documents():
     documents = models.Document.query.all()
     documents_schema = models.DocumentSchema(many=True)
     return jsonify(documents_schema.dump(documents))
+
+@app.route('/api/v1/esearch/<search_word>', methods=['GET'])
+def search(search_word):
+    # models.Document.search(search_word, page, Documents_Per_Page'])
+    posts, total = models.Document.search(search_word, 1, 20)
+    return jsonify(documents_schema.dump(posts))
